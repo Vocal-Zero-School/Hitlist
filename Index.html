@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Terminal Assassin Network</title>
     <style>
-        /* Boot-up Screen Styles */
         body.booting {
             background: #000;
             color: #0f0;
@@ -50,14 +49,13 @@
             left: 0;
         }
 
-        /* Main Site Styles */
         body {
             margin: 0;
             padding: 0;
             font-family: 'Courier New', Courier, monospace;
             background: #000;
             color: #0f0;
-            display: none; /* Hide the main content initially */
+            display: none;
         }
         .container {
             display: flex;
@@ -65,7 +63,7 @@
             height: 100vh;
             padding: 20px;
             box-sizing: border-box;
-            opacity: 0; /* Initially hide the content */
+            opacity: 0;
             transition: opacity 1s ease-in;
         }
         header {
@@ -262,42 +260,32 @@
         </div>
     </div>
     <script>
-        // Data for the bounty list
         const bounties = [
             {
-                title: "John 'The Snake' Doe",
-                details: "Known for double-crossing associates. Last seen in New York.",
+                title: "John Doe",
+                details: "Wanted for high treason. Last seen in New York.",
                 reward: "50 BTC",
                 status: "Active"
             },
             {
-                title: "Mary 'The Ghost' Smith",
-                details: "Infiltrated several criminal organizations. Currently in hiding.",
+                title: "Jane Smith",
+                details: "Involved in illegal arms trade. Currently in Moscow.",
                 reward: "75 BTC",
-                status: "Active"
-            },
-            {
-                title: "Alex 'The Shadow' Brown",
-                details: "Betrayed his crew. Now a fugitive. Location unknown.",
-                reward: "100 BTC",
                 status: "Active"
             }
         ];
 
-        // Random user generator
         function generateRandomUser() {
             const names = ["ShadowHunter", "NightStalker", "DarkAngel", "SilentReaper", "GhostWalker"];
             return names[Math.floor(Math.random() * names.length)];
         }
 
-        // Data for the chat messages
         const chatMessages = [
             "[System] Welcome to Terminal Assassin Network.",
             "[User] Any updates on the latest targets?",
             "[System] Check out the list above for the latest hits."
         ];
 
-        // Load bounties into the page
         function loadBounties() {
             const bountyList = document.getElementById('bounty-list');
             bountyList.innerHTML = '';
@@ -313,7 +301,6 @@
             });
         }
 
-        // Load chat messages into the chat log
         function loadChatMessages() {
             const chatMessagesDiv = document.getElementById('chat-messages');
             chatMessagesDiv.innerHTML = '';
@@ -323,10 +310,9 @@
                 div.textContent = message;
                 chatMessagesDiv.appendChild(div);
             });
-            chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight; // Auto-scroll to bottom
+            chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight;
         }
 
-        // Handle sending chat messages
         function sendMessage() {
             const input = document.getElementById('chat-input');
             const message = input.value;
@@ -339,7 +325,6 @@
             }
         }
 
-        // Generate a random response from the system
         function getResponse(userMessage) {
             const responses = [
                 "Sorry, I didn't understand that.",
@@ -350,7 +335,6 @@
             return responses[Math.floor(Math.random() * responses.length)];
         }
 
-        // Add a new bounty to the list
         function addBounty(title, details, reward) {
             bounties.push({
                 title: title,
@@ -361,7 +345,6 @@
             loadBounties();
         }
 
-        // Handle target form submission
         document.getElementById('target-form').addEventListener('submit', (event) => {
             event.preventDefault();
             const title = document.getElementById('title').value;
@@ -371,12 +354,10 @@
             document.getElementById('target-form').reset();
         });
 
-        // Get a random element from an array
         function getRandomElement(array) {
             return array[Math.floor(Math.random() * array.length)];
         }
 
-        // Update the chat log with random messages
         function updateChat() {
             const randomMessage = getRandomElement([
                 "[System] New bounty added!",
@@ -388,7 +369,6 @@
             loadChatMessages();
         }
 
-        // Update the bounty list with random events
         function updateBounties() {
             const newBounties = [
                 {
@@ -413,7 +393,6 @@
             loadBounties();
         }
 
-        // Add random chat messages from users
         function addRandomUserMessage() {
             const users = [generateRandomUser(), generateRandomUser()];
             const randomUser = getRandomElement(users);
@@ -428,9 +407,7 @@
             loadChatMessages();
         }
 
-        // Initialize the page
         function init() {
-            // Show the boot-up screen
             const bootupScreen = document.querySelector('.bootup-screen');
             const progressBar = document.querySelector('.progress');
             let progress = 0;
@@ -446,22 +423,21 @@
                             bootupScreen.style.display = 'none';
                             document.body.classList.remove('booting');
                             const container = document.querySelector('.container');
-                            document.body.style.display = 'block'; // Show the body
+                            document.body.style.display = 'block';
                             setTimeout(() => {
-                                container.style.opacity = '1'; // Fade in the main content
+                                container.style.opacity = '1';
                                 loadBounties();
                                 loadChatMessages();
-                                setInterval(updateChat, 5000); // Update chat every 5 seconds
-                                setInterval(updateBounties, 10000); // Update bounties every 10 seconds
-                                setInterval(addRandomUserMessage, 7000); // Add random user messages every 7 seconds
-                            }, 10); // Small delay to ensure the container is displayed before fading in
+                                setInterval(updateChat, 5000);
+                                setInterval(updateBounties, 10000);
+                                setInterval(addRandomUserMessage, 7000);
+                            }, 10);
                         }, 500);
                     }, 500);
                 }
             }, 200);
         }
 
-        // Start initialization on page load
         window.addEventListener('load', init);
     </script>
 </body>
