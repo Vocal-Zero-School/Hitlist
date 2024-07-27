@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terminal Assassin Network</title>
+    <style>
+        /* Boot-up Screen Styles */
+        body.booting {
+            background: #000;
+            color: #0f0;
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        .bootup-screen {
+            text-align: center;
+            opacity: 1;
+            transition: opacity 1s ease-out;
+        }
+        .bootup-screen h1 {
+            font-size: 32px;
+            margin: 20px 0;
+        }
+        .bootup-screen p {
+            font-size: 16px;
+            margin: 10px 0;
+        }
+        .bootup-screen .progress-bar {
+            width: 300px;
+            height: 20px;
+            border: 1px solid #0f0;
+            border-radius: 5px;
+            margin: 20px auto;
+            background: #000;
+            overflow: hidden;
+            position: relative;
+        }
+        .bootup-screen .progress-bar .progress {
+            height: 100%;
+            background: #0f0;
+            width: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        /* Main Site Styles */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Courier New', Courier, monospace;
+            background: #000;
+            color: #0f0;
+            display: none; /* Hide the main content initially */
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+            opacity: 0; /* Initially hide the content */
+            transition: opacity 1s ease-in;
+        }
+        header {
+            background: #111;
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #f00;
+        }
+        header h1 {
+            margin: 0;
+            color: #f00;
+            font-size: 36px;
+            text-shadow: 0 0 10px #f00;
+        }
+        .bounties {
+            flex: 1;
+            background: #222;
+            border: 1px solid #f00;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+            overflow-y: auto;
+        }
+        .bounties h2 {
+            margin-top: 0;
+            font-size: 28px;
+            color: #f00;
+        }
+        .bounties ul {
+            list-style: none;
+            padding: 0;
+        }
+        .bounties li {
+            padding: 15px;
+            border-bottom: 1px solid #333;
+            position: relative;
+            background: #111;
+            border-radius: 5px;
+        }
+        .bounties li:last-child {
+            border-bottom: none;
+        }
+        .bounties .title {
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .bounties .details {
+            font-size: 14px;
+            color: #ccc;
+        }
+        .bounties .reward {
+            font-size: 16px;
+            color: #f00;
+        }
+        .bounties .status {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #f00;
+            color: #000;
+            padding: 5px;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+        .bounties .status.completed {
+            background: #0f0;
+            color: #000;
+        }
+        .chatlog {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            width: 300px;
+            height: 200px;
+            background: #111;
+            border: 1px solid #f00;
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+            overflow: hidden;
+        }
+        .chatlog h3 {
+            margin-top: 0;
+            font-size: 16px;
+        }
+        .chatlog .messages {
+            height: 150px;
+            overflow-y: auto;
+        }
+        .chatlog .message {
+            margin-bottom: 10px;
+        }
+        .chatlog .message.system {
+            color: #f00;
+        }
+        .chatlog .message.user {
+            color: #0f0;
+        }
+        .chatlog .input {
+            display: flex;
+            margin-top: 10px;
+        }
+        .chatlog input[type="text"] {
+            flex: 1;
+            padding: 5px;
+            border: 1px solid #f00;
+            background: #000;
+            color: #0f0;
+        }
+        .chatlog button {
+            padding: 5px;
+            border: none;
+            background: #f00;
+            color: #000;
+            cursor: pointer;
+        }
+        .chatlog button:hover {
+            background: #c00;
+        }
+        .add-target {
+            margin-top: 20px;
+            background: #333;
+            padding: 20px;
+            border: 1px solid #f00;
+            border-radius: 5px;
+        }
+        .add-target h2 {
+            margin-top: 0;
+            font-size: 24px;
+            color: #f00;
+        }
+        .add-target label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        .add-target input, .add-target textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #f00;
+            background: #000;
+            color: #0f0;
+        }
+        .add-target button {
+            padding: 10px;
+            border: none;
+            background: #f00;
+            color: #000;
+            cursor: pointer;
+        }
+        .add-target button:hover {
+            background: #c00;
+        }
+    </style>
+</head>
+<body class="booting">
+    <div class="bootup-screen">
+        <h1>Terminal Assassin Network</h1>
+        <p>Warning: You are entering a highly dangerous site. Proceed at your own risk.</p>
+        <div class="progress-bar">
+            <div class="progress"></div>
+        </div>
+    </div>
+    <div class="container">
+        <header>
+            <h1>Terminal Assassin Network</h1>
+        </header>
+        <div class="bounties" id="bounties">
+            <h2>Current Hits</h2>
+            <ul id="bounty-list">
+                <!-- Bounties will be inserted here by JavaScript -->
+            </ul>
+        </div>
+        <div class="add-target">
+            <h2>Add New Target</h2>
+            <form id="target-form">
+                <label for="title">Target Name:</label>
+                <input type="text" id="title" required>
+                <label for="details">Details:</label>
+                <textarea id="details" rows="4" required></textarea>
+                <label for="reward">Reward (BTC):</label>
+                <input type="text" id="reward" required>
+                <button type="submit">Add Target</button>
+            </form>
+        </div>
+        <div class="chatlog">
+            <h3>Chat</h3>
+            <div class="messages" id="chat-messages">
+                <!-- Chat messages will be inserted here by JavaScript -->
+            </div>
+            <div class="input">
+                <input type="text" id="chat-input" placeholder="Type a message...">
+                <button onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Data for the bounty list
+        const bounties = [
+            {
+                title: "John 'The Snake' Doe",
+                details: "Known for double-crossing associates. Last seen in New York.",
+                reward: "50 BTC",
+                status: "Active"
+            },
+            {
+                title: "Mary 'The Ghost' Smith",
+                details: "Infiltrated several criminal organizations. Currently in hiding.",
+                reward: "75 BTC",
+                status: "Active"
+            },
+            {
+                title: "Alex 'The Shadow' Brown",
+                details: "Betrayed his crew. Now a fugitive. Location unknown.",
+                reward: "100 BTC",
+                status: "Active"
+            }
+        ];
+
+        // Random user generator
+        function generateRandomUser() {
+            const names = ["ShadowHunter", "NightStalker", "DarkAngel", "SilentReaper", "GhostWalker"];
+            return names[Math.floor(Math.random() * names.length)];
+        }
+
+        // Data for the chat messages
+        const chatMessages = [
+            "[System] Welcome to Terminal Assassin Network.",
+            "[User] Any updates on the latest targets?",
+            "[System] Check out the list above for the latest hits."
+        ];
+
+        // Load bounties into the page
+        function loadBounties() {
+            const bountyList = document.getElementById('bounty-list');
+            bountyList.innerHTML = '';
+            bounties.forEach(bounty => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <div class="title">${bounty.title}</div>
+                    <div class="details">${bounty.details}</div>
+                    <div class="reward">${bounty.reward}</div>
+                    <div class="status ${bounty.status.toLowerCase()}">${bounty.status}</div>
+                `;
+                bountyList.appendChild(li);
+            });
+        }
+
+        // Load chat messages into the chat log
+        function loadChatMessages() {
+            const chatMessagesDiv = document.getElementById('chat-messages');
+            chatMessagesDiv.innerHTML = '';
+            chatMessages.forEach(message => {
+                const div = document.createElement('div');
+                div.className = `message ${message.startsWith('[System]') ? 'system' : 'user'}`;
+                div.textContent = message;
+                chatMessagesDiv.appendChild(div);
+            });
+            chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight; // Auto-scroll to bottom
+        }
+
+        // Handle sending chat messages
+        function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const message = input.value;
+            if (message) {
+                const response = getResponse(message);
+                chatMessages.push(`[User] ${message}`);
+                chatMessages.push(`[System] ${response}`);
+                loadChatMessages();
+                input.value = '';
+            }
+        }
+
+        // Generate a random response from the system
+        function getResponse(userMessage) {
+            const responses = [
+                "Sorry, I didn't understand that.",
+                "The target information is being updated.",
+                "Check the bounty list for recent changes.",
+                "New instructions will be provided soon."
+            ];
+            return responses[Math.floor(Math.random() * responses.length)];
+        }
+
+        // Add a new bounty to the list
+        function addBounty(title, details, reward) {
+            bounties.push({
+                title: title,
+                details: details,
+                reward: reward,
+                status: "Active"
+            });
+            loadBounties();
+        }
+
+        // Handle target form submission
+        document.getElementById('target-form').addEventListener('submit', (event) => {
+            event.preventDefault();
+            const title = document.getElementById('title').value;
+            const details = document.getElementById('details').value;
+            const reward = document.getElementById('reward').value;
+            addBounty(title, details, reward);
+            document.getElementById('target-form').reset();
+        });
+
+        // Get a random element from an array
+        function getRandomElement(array) {
+            return array[Math.floor(Math.random() * array.length)];
+        }
+
+        // Update the chat log with random messages
+        function updateChat() {
+            const randomMessage = getRandomElement([
+                "[System] New bounty added!",
+                "[System] A bounty has been completed.",
+                "[System] A target has gone dark.",
+                "[System] New information received on a target."
+            ]);
+            chatMessages.push(randomMessage);
+            loadChatMessages();
+        }
+
+        // Update the bounty list with random events
+        function updateBounties() {
+            const newBounties = [
+                {
+                    title: "Evelyn 'The Viper' Brown",
+                    details: "Marked for her betrayal. Last seen in Tokyo.",
+                    reward: "60 BTC",
+                    status: "Active"
+                },
+                {
+                    title: "Victor 'The Hawk' Taylor",
+                    details: "Traitor in the ranks. Recently spotted in Berlin.",
+                    reward: "90 BTC",
+                    status: "Active"
+                }
+            ];
+            if (Math.random() > 0.5) {
+                bounties.push(getRandomElement(newBounties));
+                bounties.forEach(bounty => {
+                    if (Math.random() > 0.7) bounty.status = "Completed";
+                });
+            }
+            loadBounties();
+        }
+
+        // Add random chat messages from users
+        function addRandomUserMessage() {
+            const users = [generateRandomUser(), generateRandomUser()];
+            const randomUser = getRandomElement(users);
+            const messages = [
+                "Have you seen the latest bounty?",
+                "The new target seems dangerous.",
+                "I'm looking for more information on the recent hit.",
+                "I heard the reward has increased!"
+            ];
+            const message = getRandomElement(messages);
+            chatMessages.push(`[${randomUser}] ${message}`);
+            loadChatMessages();
+        }
+
+        // Initialize the page
+        function init() {
+            // Show the boot-up screen
+            const bootupScreen = document.querySelector('.bootup-screen');
+            const progressBar = document.querySelector('.progress');
+            let progress = 0;
+            
+            const interval = setInterval(() => {
+                progress += 10;
+                progressBar.style.width = `${progress}%`;
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        bootupScreen.style.opacity = '0';
+                        setTimeout(() => {
+                            bootupScreen.style.display = 'none';
+                            document.body.classList.remove('booting');
+                            const container = document.querySelector('.container');
+                            document.body.style.display = 'block'; // Show the body
+                            setTimeout(() => {
+                                container.style.opacity = '1'; // Fade in the main content
+                                loadBounties();
+                                loadChatMessages();
+                                setInterval(updateChat, 5000); // Update chat every 5 seconds
+                                setInterval(updateBounties, 10000); // Update bounties every 10 seconds
+                                setInterval(addRandomUserMessage, 7000); // Add random user messages every 7 seconds
+                            }, 10); // Small delay to ensure the container is displayed before fading in
+                        }, 500);
+                    }, 500);
+                }
+            }, 200);
+        }
+
+        // Start initialization on page load
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>
